@@ -10,7 +10,6 @@ fs.readdir(stylesDir, (err, res) => {
 
     res.forEach(el => {
         if (path.extname(el) == '.css') {
-            console.log(el);
             let rs = fs.createReadStream(path.join(stylesDir, el), {encoding: 'utf-8'});
             let ws = fs.createWriteStream(path.join(bundleDir, 'bundle.css'));
             
