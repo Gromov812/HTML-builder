@@ -61,3 +61,10 @@ fs.mkdir(distPath, { recursive: true }, err => { // Создаём папку pr
             })
         })
     })
+
+    const assetsPath = path.join(__dirname, 'assets');
+    const distAssetsPath = path.join(distPath, 'assets');
+
+        fs.cp(assetsPath, distAssetsPath, { recursive: true }, err => {
+            if (err) console.log(err);
+        })
