@@ -49,14 +49,12 @@ fs.mkdir(distPath, { recursive: true }, err => { // Создаём папку pr
     const styleFilePath = path.join(distPath, 'style.css');
     const styleWS = fs.createWriteStream(styleFilePath);
 
-    console.log(styleFilePath);
     fs.readdir(stylesPath, (err, files) => {
-        console.log(files);
         let bundle = '';
         files.forEach(elem => {
             fs.createReadStream(path.join(stylesPath, elem), 'utf-8')
             .on('data', data => {
-                bundle += data;
+                bundle = data;
                 styleWS.write(bundle);
             })
         })
@@ -65,6 +63,33 @@ fs.mkdir(distPath, { recursive: true }, err => { // Создаём папку pr
     const assetsPath = path.join(__dirname, 'assets');
     const distAssetsPath = path.join(distPath, 'assets');
 
-        fs.cp(assetsPath, distAssetsPath, { recursive: true }, err => {
-            if (err) console.log(err);
+
+
+
+    fs.mkdir(distAssetsPath, {recursive: true}, (err) => {
+        if (err) console.log(err);
+        fs.readdir(assetsPath, {withFileTypes: true}, (err, files) => {
+            if (err) return err;
+
+            files.forEach(async el => {
+
+             
+                let curPathToWrite = path.join(distPath,'assets', el.name)
+               if (el.isDirectory()) {
+                fs.mkdir(curPathToWrite, {recursive: true}, (err) => {
+                    if (err) console.log(err);
+                    fs.readdir(path.join(assetsPath, el.name), (err, res) => {
+                        if (err) console.log(err);
+                        res.forEach(elem => {
+                            fs.createReadStream(path.join(assetsPath, el.name, elem)).pipe(fs.createWriteStream(path.join(curPathToWrite, elem)))
+                        })
+                    })
+                })
+               }
+            })
+    
         })
+
+    })
+
+    
