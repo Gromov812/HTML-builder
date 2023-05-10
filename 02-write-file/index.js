@@ -8,9 +8,7 @@ console.log(`Введите текст для записи в файл:`);
 process.stdin.on('data', data => {
 
     if (data.toString().includes('exit')) {
-
-        
-        console.log(`Команда exit получена, завершаем запись!`);
+        console.log(`Запись завершена, всего доброго!`);
         writeStream.end();
         process.exit();
     }
@@ -19,5 +17,12 @@ process.stdin.on('data', data => {
         writeStream.write(data)
         console.log(`Сообщение '${data.toString()}' записано в файл! Что-нибудь ещё?`);
     }
+    process.on('SIGINT', () => {
+        console.log(`Запись завершена, всего доброго!!`);
+        writeStream.end();
+        process.exit();
+    })
+
 })
+
 
